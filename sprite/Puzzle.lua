@@ -75,7 +75,40 @@ function Puzzle:findEdge()
 	return edgeMatrix
 end
 
-function Puzzle:cutToItems()
+function Puzzle:printItems()
+	local items = self:getItems()
+	for i = 1, #items do	
+	    print(string.format("items %d:\n", i))
+		self:print(items[i][2], items[i][1])
+	end
+end
+
+function Puzzle:getItems()
+	local items = self:cutToOriginItems()
+	local reItems = {}
+	for i = 1, #items do
+		local item = self:delWithOriginItem(items[i])
+        local min, max, item = item[1], item[2], item[3]
+		local width, height = max[1] - min[1] + 1, max[2] - min[2] + 1
+		
+		local reItem = {}
+		for i = 1, width do
+			reItem[i] = {}
+			for j = 1, height do
+				reItem[i][j] = 0
+			end
+		end
+
+		for i = 1, #item do
+			reItem[item[i][1] + 1][item[i][2] + 1] = self.matrix[item[i][1] + min[1]][item[i][2] + min[2]]
+		end
+
+		table.insert(reItems, {{width, height}, reItem})
+	end
+	return reItems
+end
+
+function Puzzle:cutToOriginItems()
 	local bfs = require("app.myUtils").bfs
 
 	local finished = {}
@@ -145,31 +178,7 @@ function Puzzle:cutToItems()
 	return items
 end
 
-function Puzzle:printItems()
-	local items = self:cutToItems()
-	for i = 1, #items do
-		local item = self:cutItem(items[i])
-        local min, max, item = item[1], item[2], item[3]
-		local width, height = max[1] - min[1] + 1, max[2] - min[2] + 1
-		
-		local toPrint = {}
-		for i = 1, width do
-			toPrint[i] = {}
-			for j = 1, height do
-				toPrint[i][j] = 0
-			end
-		end
-
-		for i = 1, #item do
-			toPrint[item[i][1] + 1][item[i][2] + 1] = self.matrix[item[i][1] + min[1]][item[i][2] + min[2]]
-		end
-
-        print(string.format("items %d:\n", i))
-		self:print(toPrint, {width, height})
-	end
-end
-
-function Puzzle:cutItem(item)
+function Puzzle:delWithOriginItem(item)
 	local minx, miny = item[1][1], item[1][2]
 	local maxx, maxy = minx, miny
 	for _, item in pairs(item) do
@@ -195,6 +204,7 @@ end
 
 local function getGameStatePath()
     return string.gsub(device.writablePath, "[\\\\/]+$", "") .. device.directorySeparator
+    --
 end
 
 function Puzzle:export(filename)

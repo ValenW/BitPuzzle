@@ -1,6 +1,5 @@
 local myUserDefault = cc.UserDefault:getInstance()
 
-    myUserDefault:setBoolForKey("nofirst", false)
 if not myUserDefault:getBoolForKey("nofirst") then
     myUserDefault:setBoolForKey("nofirst", true)
     myUserDefault:setIntegerForKey("times", 0)
