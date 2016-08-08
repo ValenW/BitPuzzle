@@ -43,13 +43,6 @@ function Puzzle:printEdges()
 	end
 end
 
-function Puzzle:getEdgeMatrix()
-	if self.edgeMatrix == nil then
-		self.edgeMatrix = self:findEdge()
-	end
-	return self.edgeMatrix
-end
-
 function Puzzle:findEdge()
 	local dir = { {-1, 0}, {0, 1}, {0, -1}, {1, 0} } -- left, up, down, right
 	local factor = {1, 2, 4, 8}
@@ -57,8 +50,9 @@ function Puzzle:findEdge()
 	for i = 1, self.width do
 		edgeMatrix[i] = {}
 		for j = 1, self.height do
-			local edge = {0, 0}
+			local edge = {-1, -1}
 			if self.matrix[i][j] ~= 0 then
+				edge = {0, 0}
 				for k, d in ipairs(dir) do
 				    if self.matrix[i + d[1]] ~= nil and self.matrix[i + d[1]][j + d[2]] ~= nil then
 						if self.matrix[i + d[1]][j + d[2]] == 0 then
@@ -79,7 +73,7 @@ function Puzzle:printItems()
 	local items = self:getItems()
 	for i = 1, #items do	
 	    print(string.format("items %d:\n", i))
-		self:print(items[i][2], items[i][1])
+		self:print(items[i])
 	end
 end
 
@@ -103,7 +97,7 @@ function Puzzle:getItems()
 			reItem[item[i][1] + 1][item[i][2] + 1] = self.matrix[item[i][1] + min[1]][item[i][2] + min[2]]
 		end
 
-		table.insert(reItems, {{width, height}, reItem})
+		table.insert(reItems, reItem)
 	end
 	return reItems
 end
@@ -122,18 +116,18 @@ function Puzzle:cutToOriginItems()
 	local getNextFunc = function ()
 		local dir = {{-1, 0}, {0, 1}, {0, -1}, {1, 0}} -- left, up, down, right
 		local factor = {1, 2, 4, 8}
-		local origintbl = self.matrix
         local tbl = self:getEdgeMatrix()
         
 		local function ok(newNode, dir)
-		    if (origintbl[newNode[1]] == nil) then
+		    if tbl[newNode[1]] == nil then
 		        return false
-	        end
-	        if origintbl[newNode[1]][newNode[2]] == nil or origintbl[newNode[1]][newNode[2]] == 0 then
-	            return false
 	        end
 	        
             local newNode = tbl[newNode[1]][newNode[2]]
+            if newNode == nil or newNode[1] == -1 then
+            	return false
+            end
+
 			local dir = 5 - dir
 			local sum = newNode[1] + newNode[2]
 			for i = 4, 1, -1 do

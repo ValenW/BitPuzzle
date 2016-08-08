@@ -42,7 +42,7 @@ function PuzzleEditor:export(filename)
     self.puzzle:printCut()
     
     self.puzzle:printItems()
-    
+    -- self.puzzle:printEdges()
     self.puzzle:export(filename)
 end
 

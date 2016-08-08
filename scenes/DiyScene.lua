@@ -27,9 +27,8 @@ end
 function DiyScene:setTexts()
     local locWid, intervalHeight = {}
     for _, i in ipairs({"Block", "Cut"}) do
-    
+        local basePath = "PageView."..i.."Panel.ScrollView"
         for j = 1, config[i.."Num"] do
-            local basePath = "PageView."..i.."Panel.ScrollView"
             local childPath = basePath..".block"..j
             local child = self:getChild(childPath)
 
@@ -55,6 +54,8 @@ function DiyScene:setTexts()
             self:setText(childPath, path)
         end
         self:getChild("PageView."..i.."Panel.select0"):setVisible(false)
+
+        -- self:getChild(basePath):setInnerContainerSize( (math.ceil(config[i.."Num"] / config.colorPerCul) + 1) * intervalHeight)
     end
 end
 
