@@ -12,15 +12,51 @@ MyConfig.aurl = "https://play.google.com/store/apps/details?id=org.skydomain.emo
 MyConfig.shareWord = "I've got %d points in Emoji Dab! Can anyone dab further than me?"
 
 MyConfig.productID = {
-    
+
 }
+
+MyConfig.cutTag = -2
 
 MyConfig.boardLength = 30
 MyConfig.BlockNum = 10
 MyConfig.BlockNow = 1
 MyConfig.CutNum = 10
 MyConfig.CutNow = 1
-MyConfig.colorPerCul = 5
+MyConfig.colorPerCul = 6
+
+MyConfig.colors = {
+    [1] = 12,
+    [2] = 18,
+    [3] = 10,
+    [4] = 13,
+    [5] = 18,
+    [6] = 9,
+    [7] = 6,
+    [8] = 13,
+    [9] = 13,
+    [10] = 6,
+    [11] = 12,
+    [12] = 11,
+    [13] = 8,
+    [14] = 11,
+    [15] = 8,
+    [16] = 24,
+    [17] = 13,
+    [18] = 18,
+    [19] = 13,
+    [20] = 13,
+    [21] = 19,
+    [22] = 15,
+    [23] = 15,
+    [24] = 10,
+    [25] = 12,
+    [26] = 17,
+    [27] = 6
+}
+
+MyConfig.cuts = {
+	[1] = 10
+}
 
 MyConfig.userfile = myUserDefault
 

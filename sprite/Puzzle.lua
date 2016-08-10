@@ -15,7 +15,6 @@ end
 
 function Puzzle:setDefault()
     self:reset(config.boardLength)
-    self.edgeMatrix = nil
 	self:initCut()
 end
 
@@ -29,6 +28,7 @@ function Puzzle:initCut()
 	end
 end
 
+-- Edges --
 function Puzzle:printEdges()
 	local edges = self:getEdgeMatrix()
 	for time = 1, 2 do
@@ -69,6 +69,7 @@ function Puzzle:findEdge()
 	return edgeMatrix
 end
 
+-- Items --
 function Puzzle:printItems()
 	local items = self:getItems()
 	for i = 1, #items do	
@@ -78,6 +79,10 @@ function Puzzle:printItems()
 end
 
 function Puzzle:getItems()
+	if self.items ~= nil then
+		return self.items
+	end
+
 	local items = self:cutToOriginItems()
 	local reItems = {}
 	for i = 1, #items do
@@ -97,8 +102,10 @@ function Puzzle:getItems()
 			reItem[item[i][1] + 1][item[i][2] + 1] = self.matrix[item[i][1] + min[1]][item[i][2] + min[2]]
 		end
 
+		reItem.base = min
 		table.insert(reItems, reItem)
 	end
+	self.items = reItems
 	return reItems
 end
 
@@ -196,6 +203,7 @@ function Puzzle:delWithOriginItem(item)
 	return {{minx, miny}, {maxx, maxy}, item}
 end
 
+-- Impot and Export, print --
 local function getGameStatePath()
     return string.gsub(device.writablePath, "[\\\\/]+$", "") .. device.directorySeparator
     --

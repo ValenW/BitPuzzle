@@ -22,4 +22,16 @@ utils.bfs = function (start, finished, getNext, func)
     return visited
 end
 
+utils.randomOrder = function (length)
+    local re = {}
+    for i = 1, length do
+        re[i] = i
+    end
+    for i = 1, length - 1 do
+        local index = math.random(length - i) + i
+        re[i], re[index] = re[index], re[i]
+    end
+    return re
+end
+
 return utils
