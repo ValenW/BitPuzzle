@@ -16,6 +16,9 @@ MyConfig.productID = {
 }
 
 MyConfig.cutTag = -2
+MyConfig.edgeTag = -3
+
+MyConfig.shadowZ = 2
 
 MyConfig.boardLength = 30
 MyConfig.BlockNum = 10

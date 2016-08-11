@@ -10,10 +10,10 @@ function Matrix:reset(width, height)
     if width ~= nil then
 	    self.width = width
 	    if height ~= nil then
-	        self.height = height
+            self.height = height
 	    else
 	        self.height = width
-	    end
+        end
     end
 
     if self.width == nil then
@@ -33,19 +33,20 @@ function Matrix:reset(width, height)
 	self.edge, self.items = nil
 end
 
-function Matrix:getEdgeMatrix()
+function Matrix:getEdgeMatrix(ifboard)
 	if self.edgeMatrix == nil then
-		self.edgeMatrix = self:findEdge()
-	end
-	return self.edgeMatrix
+        self.edgeMatrix = self:findEdge(nil, ifboard)
+    end
+    return self.edgeMatrix
 end
 
-function Matrix:findEdge(matrix)
+function Matrix:findEdge(matrix, ifboard)
+    dump(ifboard)
 	if matrix == nil then
 		matrix = self.matrix
 	end
 
-	local dir = { {-1, 0}, {0, 1}, {0, -1}, {1, 0} } -- left, up, down, right
+    local dir = { {-1, 0}, {0, 1}, {0, -1}, {1, 0} } -- left, up, down, right
 	local factor = {1, 2, 4, 8}
 	local edgeMatrix = {}
 	for i = 1, #matrix do
@@ -59,6 +60,8 @@ function Matrix:findEdge(matrix)
 						if matrix[i + d[1]][j + d[2]] == 0 then
 							edge = edge + factor[k]
 						end
+                    elseif ifboard == true then
+                        edge = edge + factor[k]
 					end
 				end
 			end
