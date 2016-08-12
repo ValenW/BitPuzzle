@@ -81,7 +81,6 @@ function PuzzleItem:clearOld(bitItemMatrix, oldWorldPos)
             end
         end
     end
-    self:print(self.completed)
 end
 
 function PuzzleItem:put(bitItemMatrix, worldPos, ifPut)
@@ -129,7 +128,6 @@ function PuzzleItem:put(bitItemMatrix, worldPos, ifPut)
     if self.win == true then
         dump("wim")
     end
-    self:print(self.completed)
 	return self:getFixPanelPosition(bitPos)
 end
 

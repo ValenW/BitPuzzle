@@ -11,7 +11,7 @@ local GameScene = class("GameScene", SceneBase)
 function GameScene:ctor(puzzleFile)
     local puzzleFile = "cut 1.txt"
     self:init("Scene/GameScene.csb")
-    
+
 	self.puzzleBoard = self:getChild("PuzzleBoard")
     self.blockLength = self.puzzleBoard:getContentSize().width / config.boardLength * self.puzzleBoard:getScaleX()
 
@@ -27,6 +27,7 @@ function GameScene:initWithPuzzle(puzzleFile)
     self.bitList = self:getChild("ListView")
     self.bitList:setLocalZOrder(config.listOrder)
     self.bitList:setItemsMargin(60)
+    self.bitList:addTouchEventListener(handler(self, self.scrollList))
     
     local items = self.puzzle:getItems()
     self.bitItems = {}
@@ -47,6 +48,36 @@ function GameScene:initWithPuzzle(puzzleFile)
         self.bitItems[i]:setListView(self.bitList)
         self.bitList:pushBackCustomItem(clonepanel)
     end
+end
+
+function GameScene:scrollList(sender, eventType)
+    dump(eventType)
+    local inner = self.bitList:getInnerContainer()
+    local innerPos, size = cc.p(inner:getPosition()).x, inner:getContentSize().width - self.bitList:getContentSize().width
+    if size == 0 then
+        self:getChild("ScrollHead"):setVisible(false)
+        self:getChild("ScrollBG"):setVisible(false)
+        self:getChild("ScrollLeft"):setVisible(false)
+        self:getChild("ScrollRight"):setVisible(false)
+        self:getChild("ScrollBar"):setVisible(false)
+        return nil
+    end
+    local persent = -innerPos / size
+
+    self:getChild("ScrollHead"):setVisible(true)
+    self:getChild("ScrollBG"):setVisible(true)
+    self:getChild("ScrollLeft"):setVisible(true)
+    self:getChild("ScrollRight"):setVisible(true)
+    self:getChild("ScrollBar"):setVisible(true)
+    self:setScrollPersent(persent)
+    return persent
+end
+
+function GameScene:setScrollPersent(persent)
+    local scrollBar = self:getChild("ScrollBar")
+    local left = scrollBar:getContentSize().width / 2 + 20
+    local length = display.width - left * 2
+    scrollBar:setPositionX(left + length * persent)
 end
 
 function GameScene:setTexts()

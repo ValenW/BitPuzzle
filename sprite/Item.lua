@@ -42,7 +42,7 @@ function Item:fresh(delSpFunc)
 					delSpFunc(sp, {i, j})
 				end
 
-				layout:addChild(sp)
+				layout:addChild(sp, config.listOrder)
 			end
 		end
 	end
@@ -74,7 +74,7 @@ function Item:addOneEdgeSpr(loc, dir, path)
 	local length = self.blockLength
 	local scaled = length / (size.width - 2 * size.height)
 	edgeSpr:setScale(scaled)
-	edgeSpr:setAnchorPoint(0.5, -(length / size.height * scaled / 2))
+	edgeSpr:setAnchorPoint(0.5, -(length / 2 / (size.height * scaled)))
 	edgeSpr:setPosition(cc.p((loc[1] - 0.5) * length, (loc[2] - 0.5) * length))
 	local rot = 0
 	if dir == 1 then
@@ -86,7 +86,7 @@ function Item:addOneEdgeSpr(loc, dir, path)
 	end
 	edgeSpr:setRotation(rot)
 	edgeSpr:setTag(config.edgeTag)
-	self.layout:addChild(edgeSpr)
+	self.layout:addChild(edgeSpr, config.listOrder - 1)
 end
 
 function Item:setVisibilityByTag(tag, ifview)

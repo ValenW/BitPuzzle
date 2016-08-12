@@ -28,11 +28,9 @@ function BitItem:onTouchBegan(sender)
     self:showShadow()
     self.layout:setLocalZOrder(config.listOrder + 1)
     self.puzzleItem:clearOld(self.matrix, self.layout.opos)
-    dump("began end")
 end
 
 function BitItem:onTouchMoving(sender)
-    dump("moving begin")
     local prevPos = sender:getTouchBeganPosition()
     local nowPos = sender:getTouchMovePosition()
     local opos = sender.opos
@@ -43,17 +41,15 @@ function BitItem:onTouchMoving(sender)
     end
     sender:setPosition(pos)
 
+    self.lastTouchPos = nowPos
     self:updateShadowPos()
-    dump("moving end")
 end
 
 function BitItem:onTouchEnd(sender)
-    dump("end begin")
     self:hideEdge()
     self:hideShadow()
     self:putSelf()
     self.layout:setLocalZOrder(config.listOrder - 1)
-    dump("end end")
 end
 
 -- Edge and shadow --
@@ -170,20 +166,19 @@ function BitItem:getIndexInListView(pos)
     if pos == nil then
         pos = self:getWorldPos()
     end
-    local lastIndex, last = 0, self.listView:getItem(0)
-    if last == nil then
-        return 0
-    end
-    for i = 1, 1000 do 
+    local inner = self.listView:getInnerContainer()
+    pos.x = pos.x - cc.p(inner:getPosition()).x
+    local lastIndex = 0
+    for i = 0, 1000 do
         local item = self.listView:getItem(i)
         if item == nil then
             lastIndex = i
             break
         end
-        if pos.x < self.listView:convertToWorldSpace(cc.p(item:getPosition())).x then
+        lastIndex = i
+        if pos.x < ( cc.p(item:getPosition()).x + item:getContentSize().width / 2 ) then
             break
         end
-        lastIndex = i
     end
     return lastIndex
 end
