@@ -24,6 +24,7 @@ function DiyScene:ctor()
     self.type = 1
     self.idNow = {1, 1}
     self.typeNum = 1
+    self.size = 1
 end
 
 function DiyScene:setTexts()
@@ -61,8 +62,19 @@ function DiyScene:setEvents()
     self:setEvent("BtnImport", handler(self, self.import))
     self:setEvent("BtnColor", handler(self, self.selectColorType))
     self:setEvent("BtnReset", handler(self, self.reset))
+    self:setEvent("BtnSize", handler(self, self.changeSize))
 
     self:getChild("PageView"):addEventListener(handler(self, self.changePage))
+end
+
+function DiyScene:changeSize()
+    if self.size == 1 then
+        self.size = 3
+        self:getChild("BtnSize"):setTitleText("3x3")
+    else
+        self.size = 1
+        self:getChild("BtnSize"):setTitleText("1x1")
+    end
 end
 
 function DiyScene:setBoard(type, typeNum)
@@ -115,19 +127,23 @@ end
 
 function DiyScene:export()
     local time = userfile.get("times") + 1
-    self.editor:export(time.."th puzzle.txt")
+    if self.importNum then
+        time = self.importNum
+    end
+    self.editor:export("cut "..time..".txt")
     userfile.add("times", 1)
 end
 
 function DiyScene:import()
-    local num = tonumber(self:getChild("ImportTxt"):getString())
+    local num = self:getChild("ImportTxt"):getString() -- tonumber(self:getChild("ImportTxt"):getString())
     if num == nil then
         dump("Not a Num, import newst puzzle")
         num = userfile.get("times")
     end
     
-    self.editor:import(num.."th puzzle.txt")
+    self.editor:import(num..".txt")
     self:fresh()
+    self.importNum = num
 end
 
 function DiyScene:selectColorType()
@@ -224,6 +240,18 @@ function DiyScene:setPuzzle(pos, typeNum, id, setType)
     end
 
     self:addPuzzle(x, y, typeNum, id, setType)
+
+    if self.size == 3 and setType ~= 1 then
+        for i = -1, 1 do
+            for j = -1, 1 do
+                local xx, yy = x + i, y + j
+                if not (xx < 0 or xx >= config.boardLength or yy < 0 or yy > config.boardLength) then
+                    self:addPuzzle(xx, yy, typeNum, id, setType)
+                end
+            end
+        end
+    end
+
 end
 
 function DiyScene:addPuzzle(x, y, typeNum, id, setType)

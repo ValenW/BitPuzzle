@@ -17,8 +17,9 @@ MyConfig.productID = {
 
 MyConfig.cutTag = -2
 MyConfig.edgeTag = -3
-
+MyConfig.shadowOpacity = 100
 MyConfig.shadowZ = 2
+MyConfig.listOrder = 3
 
 MyConfig.boardLength = 30
 MyConfig.BlockNum = 10

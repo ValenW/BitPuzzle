@@ -17,7 +17,7 @@ function SceneBase:getChild(name)
     for w in string.gmatch(name, "([^'.']+)") do     --按照“.”分割字符串
         table.insert(t, w) 
     end
-    
+
     local child = self.panel
     for _, v in ipairs(t) do
         child = child:getChildByName(v)

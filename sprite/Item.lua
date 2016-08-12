@@ -50,7 +50,6 @@ function Item:fresh(delSpFunc)
 end
 
 function Item:addEdgeSpr(path, ifboard)
-    dump(ifboard)
     local edgeMatrix = self:getEdgeMatrix(ifboard)
 	self:print(edgeMatrix)
 	local factor = {1, 2, 4, 8}
@@ -73,8 +72,9 @@ function Item:addOneEdgeSpr(loc, dir, path)
 	local edgeSpr = cc.Sprite:create(path)
 	local size = edgeSpr:getContentSize()
 	local length = self.blockLength
-	edgeSpr:setScale(length / (size.width - 2 * size.height))
-	edgeSpr:setAnchorPoint(0.5, -(length / size.height / 2))
+	local scaled = length / (size.width - 2 * size.height)
+	edgeSpr:setScale(scaled)
+	edgeSpr:setAnchorPoint(0.5, -(length / size.height * scaled / 2))
 	edgeSpr:setPosition(cc.p((loc[1] - 0.5) * length, (loc[2] - 0.5) * length))
 	local rot = 0
 	if dir == 1 then

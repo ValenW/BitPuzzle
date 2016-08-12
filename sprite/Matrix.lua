@@ -41,7 +41,6 @@ function Matrix:getEdgeMatrix(ifboard)
 end
 
 function Matrix:findEdge(matrix, ifboard)
-    dump(ifboard)
 	if matrix == nil then
 		matrix = self.matrix
 	end
