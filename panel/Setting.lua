@@ -9,16 +9,16 @@ end)
 function Setting:ctor(parent)
     self:init(parent)
     self:setButtons()
-    self:setTexts()
+--    self:setTexts()
 end
 
 function Setting:setButtons()
-    self:setEvent("HelpBtn", handler(self, self.help)  )
-    self:setEvent("AboutBtn", handler(self, self.about)  )
-    self:setEvent("ContactBtn", handler(self, self.contact) )
-    self:setEvent("EffectBtn", handler(self, self.effect) )
-    self:setEvent("MusicBtn", handler(self, self.music) )
-    self:setEvent("RateBtn", handler(self, self.rate)  )
+    self:setEvent("BtnHelp", handler(self, self.help)  )
+    self:setEvent("BtnAbout", handler(self, self.about)  )
+    self:setEvent("BtnContact", handler(self, self.contact) )
+    self:setEvent("BtnEffect", handler(self, self.effect) )
+    self:setEvent("BtnMusic", handler(self, self.music) )
+    self:setEvent("BtnRate", handler(self, self.rate)  )
 end
 
 function Setting:help()

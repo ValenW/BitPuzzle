@@ -16,7 +16,7 @@ MyConfig.CutNum = 10
 MyConfig.CutNow = 1
 MyConfig.colorPerCul = 6
 MyConfig.levelNum = 8
-MyConfig.puzzlePerLevel = 9
+MyConfig.puzzlePerLevel = 15
 MyConfig.puzzleNum = 200
 
 MyConfig.levelPerPage = 6
@@ -72,7 +72,7 @@ if not myUserDefault:getBoolForKey("nofirst") then
     myUserDefault:setBoolForKey("nofirst", true)
     myUserDefault:setIntegerForKey("times", 0)
     myUserDefault:setIntegerForKey("coin", 30)
-    
+
     local LevelNum = MyConfig.puzzleNum / MyConfig.puzzlePerLevel
     for i = 1, 6 do
         myUserDefault:setIntegerForKey("Level"..i, 1)

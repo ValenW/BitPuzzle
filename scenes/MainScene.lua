@@ -3,6 +3,7 @@ local userfile = config.userfile
 local SceneBase = require("app.scenes.SceneBase")
 local LevelPages = require("app.panel.LevelPages")
 local SelectScene = require("app.scenes.SelectScene")
+local Panels = require("app.panel.Panels")
 
 local MainScene = class("MainScene", SceneBase)
 
@@ -17,23 +18,23 @@ function MainScene:setTexts()
 end
 
 function MainScene:setEvents()
-    self:setEvent("LoginBtn", handler(self, self.login))
-    self:setEvent("BasicBtn", handler(self, self.enterBasic))
-    self:setEvent("HotBtn", handler(self, self.enterHot))
-    self:setEvent("BestBtn", handler(self, self.enterBest))
-    self:setEvent("NewBtn", handler(self, self.enterNew))
-    self:setEvent("MineBtn", handler(self, self.enterMine))
-    self:setEvent("CollectBtn", handler(self, self.enterCollect))
-    self:setEvent("SkinBtn", handler(self, self.enterSkin))
-    self:setEvent("SettingBtn", handler(self, self.enterSetting))
+    self:setEvent("BtnLogin", handler(self, self.login))
+    self:setEvent("BtnBasic", handler(self, self.enterBasic))
+    self:setEvent("BtnHot", handler(self, self.enterHot))
+    self:setEvent("BtnBest", handler(self, self.enterBest))
+    self:setEvent("BtnNew", handler(self, self.enterNew))
+    self:setEvent("BtnMine", handler(self, self.enterMine))
+    self:setEvent("BtnCollect", handler(self, self.enterCollect))
+    self:setEvent("BtnSkin", handler(self, self.enterSkin))
+    self:setEvent("BtnSetting", handler(self, self.setting))
 end
 
 function MainScene:login()
-    
+    Panels.Login.new(self)
 end
 
 function MainScene:setting()
-
+    Panels.Setting.new(self)
 end
 
 function MainScene:enterBasic()

@@ -9,15 +9,20 @@ end)
 function Login:ctor(parent)
     self:init(parent)
     self:setButtons()
-    self:setTexts()
+--    self:setTexts()
 end
 
 function Login:setButtons()
-    self:setEvent("LoginBtn", handler(self, self.login))
+    self:setEvent("BtnLogin", handler(self, self.login))
+    self:setEvent("BtnClose", handler(self, self.close))
 end
 
 function Login:login()
     -- TODO
+end
+
+function Login:close()
+    self:removeFromParent(true)
 end
 
 return Login

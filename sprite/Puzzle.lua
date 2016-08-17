@@ -54,13 +54,13 @@ function Puzzle:findEdge()
 			if self.matrix[i][j] ~= 0 then
 				edge = {0, 0}
 				for k, d in ipairs(dir) do
-				    if self.matrix[i + d[1]] ~= nil and self.matrix[i + d[1]][j + d[2]] ~= nil then
-						if self.matrix[i + d[1]][j + d[2]] == 0 then
-							edge[1] = edge[1] + factor[k]
-						elseif self.cut[i + d[1]][j + d[2]] ~= 0 and self.cut[i + d[1]][j + d[2]] ~= self.cut[i][j] then
-							edge[2] = edge[2] + factor[k]
-						end
-					end
+					if self.matrix[i + d[1]] ~= nil and self.matrix[i + d[1]][j + d[2]] ~= nil then
+				        if self.matrix[i + d[1]][j + d[2]] == 0 then
+						  edge[1] = edge[1] + factor[k]
+					   elseif self.cut[i + d[1]][j + d[2]] ~= 0 and self.cut[i + d[1]][j + d[2]] ~= self.cut[i][j] then
+						  edge[2] = edge[2] + factor[k]
+					   end
+				    end
 				end
 			end
 			edgeMatrix[i][j] = edge

@@ -30,12 +30,13 @@ function PuzzlePages:createPages()
     for i = 2, self.pageNum do
         local clone = self:getChild("Pages.Panel1"):clone()
         clone:setName("Panel"..i)
-        pageView:addChild(clone)
+        pageView:addPage(clone)
     end
 end
 
 function PuzzlePages:setButtonsAndTexts()
     for i = 1, self.pageNum do
+        dump(i)
         local basePath = "Pages.Panel"..i
         for j = 1, config.puzzlePerPage do
             local puzzleNum = (i - 1) * config.puzzlePerPage + j
@@ -52,7 +53,10 @@ function PuzzlePages:setButtonsAndTexts()
                     self:setText(basePath..".TxtLike"..j, self.puzzle[puzzleNum].like)
                 else
                     self:getChild(basePath..".TxtLike"..j):removeFromParent(true)
-                    self:getChild(basePath..".like"..j):removeFromParent(true)
+                    local like = self:getChild(basePath..".like"..j)
+                    if like ~= nil then
+                        like:removeFromParent(true)
+                    end
                 end
             end
         end
@@ -64,7 +68,10 @@ function PuzzlePages:removePuzzleItem(basePath, puzzleNum)
     self:getChild(basePath..".BtnPuzzle"..puzzleNum):removeFromParent(true)
     self:getChild(basePath..".TxtPuzzleId"..puzzleNum):removeFromParent(true)
     self:getChild(basePath..".TxtLike"..puzzleNum):removeFromParent(true)
-    self:getChild(basePath..".like"..puzzleNum):removeFromParent(true)
+    local like = self:getChild(basePath..".like"..puzzleNum)
+    if like ~= nil then
+        like:removeFromParent(true)
+    end
 end
 
 function PuzzlePages:initPuzzlePic(panel, puzzleNum)

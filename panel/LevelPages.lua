@@ -40,7 +40,7 @@ function LevelPages:setButtonsAndTexts()
             end
 
             local startPuzzleId = basePuzzleId + (j - 1) * config.puzzlePerLevel + 1
-            self:setText("Pages.Panel"..i..".TxtLv"..j, startPuzzleId.."-"..(startPuzzleId + config.puzzlePerLevel - 1))
+            self:setText("Pages.Panel"..i..".BtnLv"..j..".TxtLv"..j, startPuzzleId.."-"..(startPuzzleId + config.puzzlePerLevel - 1))
         end
     end
 
@@ -63,18 +63,17 @@ function LevelPages:setButtonsAndTexts()
         else
             setTxt = startPuzzleId.."-"..config.puzzleNum
         end
-        self:setText("Pages.Panel"..self.pageNum..".TxtLv"..i, setTxt)
+        self:setText("Pages.Panel"..self.pageNum..".BtnLv"..i..".TxtLv"..i, setTxt)
     end
 
     for i = leftLevel + 1, config.levelPerPage do
         self:getChild("Pages.Panel"..self.pageNum..".BtnLv"..i):removeFromParent(true)
-        self:getChild("Pages.Panel"..self.pageNum..".TxtLv"..i):removeFromParent(true)
     end
 end
 
 function LevelPages:getEnterPuzzlesFunc(pageNum, id)
     local re = function ()
-        local btn = self:getChild("Pages.Panel"..pageNum..".TxtLv"..id)
+        local btn = self:getChild("Pages.Panel"..pageNum..".BtnLv"..id..".TxtLv"..id)
         local txt = btn:getString()
         local tbl = {}
         for w in string.gmatch(txt, "([^-]+)") do
@@ -105,7 +104,6 @@ function LevelPages:replacePages(pageNum, id, puzzles)
     for i = 1, config.levelPerPage do
         if i ~= id then
             self:getChild("Pages.Panel"..pageNum..".BtnLv"..i):runAction(hideAction:clone())
-            self:getChild("Pages.Panel"..pageNum..".TxtLv"..i):runAction(hideAction:clone())
         end
     end
 
@@ -127,7 +125,6 @@ function LevelPages:replacePages(pageNum, id, puzzles)
     local action = cc.Sequence:create(moveScaleAction, replaceAction)
     btn:runAction(action)
 
-    self:getChild("Pages.Panel"..pageNum..".TxtLv"..id):setVisible(false)
     self:setEvent("Pages.Panel"..pageNum..".BtnLv"..id, self:getBackFunc(pageNum, id))
 end
 
@@ -143,7 +140,7 @@ function LevelPages:getBackFunc(pageNum, id)
         for i = 1, config.levelPerPage do
             if i ~= id then
                 self:getChild("Pages.Panel"..pageNum..".BtnLv"..i):runAction(showAction:clone())
-                self:getChild("Pages.Panel"..pageNum..".TxtLv"..i):runAction(showAction:clone())
+                self:getChild("Pages.Panel"..pageNum..".BtnLv"..i..".TxtLv"..i):runAction(showAction:clone())
             end
         end
 
@@ -151,7 +148,6 @@ function LevelPages:getBackFunc(pageNum, id)
         local moveAction, scaleAction = cc.MoveTo:create(0.3, btn.oldPos), cc.ScaleTo:create(0.3, 1)
         btn:runAction(cc.Spawn:create(moveAction, scaleAction))
 
-        self:getChild("Pages.Panel"..pageNum..".TxtLv"..id):setVisible(true)
         self:setEvent("Pages.Panel"..pageNum..".BtnLv"..id, self:getEnterPuzzlesFunc(pageNum, id))
     end
     return re

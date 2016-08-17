@@ -64,7 +64,7 @@ function DiyScene:setEvents()
     self:setEvent("BtnReset", handler(self, self.reset))
     self:setEvent("BtnSize", handler(self, self.changeSize))
     self:setEvent("BtnPlay", handler(self, self.tryPlay))
-
+    self:setEvent("BtnBack", handler(self, self.back))
     self:getChild("PageView"):addEventListener(handler(self, self.changePage))
 end
 
@@ -294,6 +294,10 @@ function DiyScene:addPuzzle(x, y, typeNum, id, setType)
             self.puzzleBoard:addChild(sp, setType)
         end
     end
+end
+
+function DiyScene:back()
+    self:enterSceneByName("MainScene")
 end
 
 return DiyScene

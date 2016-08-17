@@ -11,7 +11,7 @@ function Item:init(config, length, edgePath, delSpFunc, layout)
 
     self:fresh(delSpFunc)
     if edgePath ~= nil then
-        self:addEdgeSpr(edgePath)
+        self:addEdgeSpr(edgePath, true)
     end
 end
 
