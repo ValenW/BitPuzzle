@@ -1,6 +1,7 @@
 local config = require("app.MyConfig")
 local userfile = config.userfile
 local SceneBase = require("app.scenes.SceneBase")
+local Panels = require("app.panel.Panels")
 
 local PuzzleItem = require("app.sprite.PuzzleItem")
 local BitItem = require("app.sprite.BitItem")
@@ -9,7 +10,9 @@ local Puzzle = require("app.sprite.Puzzle")
 local GameScene = class("GameScene", SceneBase)
 
 function GameScene:ctor(puzzleFile)
-    local puzzleFile = "cut 1.txt"
+    if puzzleFile == nil then
+        puzzleFile = "cut 1.txt"
+    end
     self:init("Scene/GameScene.csb")
 
 	self.puzzleBoard = self:getChild("PuzzleBoard")
@@ -22,7 +25,12 @@ function GameScene:ctor(puzzleFile)
 end
 
 function GameScene:initWithPuzzle(puzzleFile)
-    self.puzzle = Puzzle.new(puzzleFile)
+    if type(puzzleFile) == "string" then
+        self.puzzle = Puzzle.new(puzzleFile)
+    else
+        self.puzzle = puzzleFile
+    end
+
     self.puzzleItem = PuzzleItem.new(self.puzzle, self.puzzleBoard)
     self.bitList = self:getChild("ListView")
     self.bitList:setLocalZOrder(config.listOrder)
@@ -32,7 +40,7 @@ function GameScene:initWithPuzzle(puzzleFile)
     local items = self.puzzle:getItems()
     self.bitItems = {}
     for i = 1, #items do
-        self.bitItems[i] = BitItem.new(items[i], self.blockLength, self.puzzleItem)
+        self.bitItems[i] = BitItem.new(items[self.puzzleItem.hintOrder[i]], self.blockLength, self.puzzleItem)
         self.bitItems[i].layout:setTouchEnabled(true)
         local clonepanel = self.bitItems[i].layout:clone()
         
@@ -51,7 +59,7 @@ function GameScene:initWithPuzzle(puzzleFile)
 end
 
 function GameScene:scrollList(sender, eventType)
-    dump(eventType)
+    -- TODO
     local inner = self.bitList:getInnerContainer()
     local innerPos, size = cc.p(inner:getPosition()).x, inner:getContentSize().width - self.bitList:getContentSize().width
     if size == 0 then
@@ -81,11 +89,36 @@ function GameScene:setScrollPersent(persent)
 end
 
 function GameScene:setTexts()
-    self:setEvent("HintBtn", handler(self.puzzleItem, self.puzzleItem.getHint))
+
 end
 
 function GameScene:setEvents()
+    self:setEvent("HintBtn", handler(self, self.showHint))
+    self:setEvent("BackBtn", handler(self, self.finished))
+end
+
+function GameScene:showHint()
+    local func = handler(self.puzzleItem, self.puzzleItem.getHint)
+    Panels.Trapped.new(self, handler(self.puzzleItem, self.puzzleItem.getHint))
+end
+
+function GameScene:win()
+    local cb = function ()
+        local puzzle = self.puzzle
+        local scene = GameScene.new(puzzle)
+        cc.Director:getInstance():replaceScene(scene)
+    end
     
+    if self.puzzle.id ~= nil then
+        userfile.set("Puzzle"..self.puzzle.id, 1)
+        self.puzzle.updateParent:update(self.puzzle.id)
+    end
+    
+    Panels.PuzzleDetail.new(self, self.puzzle, true, cb)
+end
+
+function GameScene:finished()
+    cc.Director:getInstance():popScene()
 end
 
 return GameScene

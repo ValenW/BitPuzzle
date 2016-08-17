@@ -5,15 +5,20 @@ local config = require("app.MyConfig")
 
 local PuzzleItem = class("PuzzleItem", Item)
 
-function PuzzleItem:ctor(puzzle, puzzlePanel)
+function PuzzleItem:ctor(puzzle, puzzlePanel, showFunc, justShow)
 	self.puzzle = puzzle
 	self.blockLength = puzzlePanel:getContentSize().width / config.boardLength
-	self:init(self.puzzle.matrix, self.blockLength, "ui/edge_black.png", function (sp) sp:setVisible(false) end, puzzlePanel)
+    if showFunc == nil then
+        showFunc = function (sp) sp:setTexture("Blocks/00/bg_with_board.png") end
+    end
+	self:init(self.puzzle.matrix, self.blockLength, "ui/edge_black.png", showFunc, puzzlePanel)
 
-	self:initBitItem()
-	self.win = false
-	self:initHint()
-	self:initCompleted()
+    if justShow ~= true then
+        self:initHint()
+    	self:initBitItem()
+    	self.win = false
+    	self:initCompleted()
+    end
 end
 
 function PuzzleItem:initBitItem()
@@ -24,7 +29,7 @@ function PuzzleItem:initBitItem()
         self.bitItems[i].layout:setPosition(cc.p((items[i].base[1] - 1) * self.blockLength, (items[i].base[2] - 1) * self.blockLength))
         self.bitItems[i].layout:setCascadeOpacityEnabled(true)
         self.bitItems[i].layout:setVisible(false)
-        self.layout:addChild(self.bitItems[i].layout)
+        self.layout:addChild(self.bitItems[i].layout, config.listOrder)
     end
 end
 
@@ -39,7 +44,7 @@ function PuzzleItem:initCompleted()
 end
 
 function PuzzleItem:initHint()
-    self.hintOrder = myUtils.randomOrder(#self.bitItems)
+    self.hintOrder = myUtils.randomOrder(#self.puzzle:getItems())
 	self.nextHint = 1
 end
 
@@ -52,7 +57,7 @@ function PuzzleItem:getHint()
 	local scaleUp = cc.ScaleTo:create(0.5, 2)
     local scaleDown = cc.ScaleTo:create(0.3, 1)
     layout:runAction(cc.Sequence:create(scaleUp, scaleDown))
-    layout:setOpacity(70)
+    layout:setOpacity(90)
 	
 	self.nextHint = self.nextHint + 1
 	return true
@@ -87,14 +92,12 @@ function PuzzleItem:put(bitItemMatrix, worldPos, ifPut)
 	local bitPos = self:getBitPositionFromWorldPosition(worldPos)
     if bitPos.x < 0 or bitPos.x + #bitItemMatrix > self.puzzle.width
         or bitPos.y < 0 or bitPos.y + #bitItemMatrix[1] > self.puzzle.height then
-        dump("over")
         return false
     end
 
 	for i = 1, #bitItemMatrix do
 		for j = 1, #bitItemMatrix[i] do
 			if bitItemMatrix[i][j] ~= 0 and self.completed[bitPos.x + i][bitPos.y + j] ~= 0 then
-			    dump("ut")
 				return false
 			end
 		end
@@ -127,6 +130,7 @@ function PuzzleItem:put(bitItemMatrix, worldPos, ifPut)
     
     if self.win == true then
         dump("wim")
+        display.getRunningScene():win()
     end
 	return self:getFixPanelPosition(bitPos)
 end

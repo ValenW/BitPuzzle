@@ -1,10 +1,3 @@
-local myUserDefault = cc.UserDefault:getInstance()
-
-if not myUserDefault:getBoolForKey("nofirst") then
-    myUserDefault:setBoolForKey("nofirst", true)
-    myUserDefault:setIntegerForKey("times", 0)
-end
-
 local MyConfig = class("MyConfig")
 
 MyConfig.iurl = "https://itunes.apple.com/app/id1138608200"
@@ -15,18 +8,29 @@ MyConfig.productID = {
 
 }
 
-MyConfig.cutTag = -2
-MyConfig.edgeTag = -3
-MyConfig.shadowOpacity = 100
-MyConfig.shadowZ = 2
-MyConfig.listOrder = 3
-
+-- Game Set
 MyConfig.boardLength = 30
 MyConfig.BlockNum = 10
 MyConfig.BlockNow = 1
 MyConfig.CutNum = 10
 MyConfig.CutNow = 1
 MyConfig.colorPerCul = 6
+MyConfig.levelNum = 8
+MyConfig.puzzlePerLevel = 9
+MyConfig.puzzleNum = 200
+
+MyConfig.levelPerPage = 6
+MyConfig.puzzlePerPage = 9
+
+MyConfig.coinPerHint = 5
+MyConfig.coinPerShare = 5
+
+-- GameScene Set
+MyConfig.cutTag = -2
+MyConfig.edgeTag = -3
+MyConfig.shadowOpacity = 100
+MyConfig.shadowZ = 2
+MyConfig.listOrder = 3
 
 MyConfig.colors = {
     [1] = 12,
@@ -57,10 +61,30 @@ MyConfig.colors = {
     [26] = 17,
     [27] = 6
 }
-
 MyConfig.cuts = {
 	[1] = 10
 }
+
+local myUserDefault = cc.UserDefault:getInstance()
+
+myUserDefault:setBoolForKey("nofirst", false)
+if not myUserDefault:getBoolForKey("nofirst") then
+    myUserDefault:setBoolForKey("nofirst", true)
+    myUserDefault:setIntegerForKey("times", 0)
+    myUserDefault:setIntegerForKey("coin", 30)
+    
+    local LevelNum = MyConfig.puzzleNum / MyConfig.puzzlePerLevel
+    for i = 1, 6 do
+        myUserDefault:setIntegerForKey("Level"..i, 1)
+    end
+    for i = 7, LevelNum do
+        myUserDefault:setIntegerForKey("Level"..i, 0)
+    end
+
+    for i = 1, MyConfig.puzzleNum do
+        myUserDefault:setIntegerForKey("Puzzle"..i, 0)
+    end
+end
 
 MyConfig.userfile = myUserDefault
 

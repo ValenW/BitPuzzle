@@ -29,20 +29,20 @@ function Item:fresh(delSpFunc)
 
 	for i = 1, self.width do
 		for j = 1, self.height do
-			local type, id = self.matrix[i][j] / 100, math.fmod(self.matrix[i][j], 100)
+			local type, id = math.floor(self.matrix[i][j] / 100), math.fmod(self.matrix[i][j], 100)
 			if id ~= 0 then
                 local path = string.format("Blocks/%02d/%02d.png", type, id)
                 local sp = cc.Sprite:create(path)
-                local size = sp:getContentSize()
-                sp:setScale(length / size.width, length / size.height)
-				sp:setAnchorPoint(cc.p(0, 0))
-				sp:setPosition(cc.p( (i - 1) * length, (j - 1) * length ))
 
 				if delSpFunc ~= nil then
-					delSpFunc(sp, {i, j})
-				end
+					delSpFunc(sp, {i, j}, length)
+                end
+                local size = sp:getContentSize()
+                sp:setScale(length / size.width, length / size.height)
+                sp:setAnchorPoint(cc.p(0, 0))
+                sp:setPosition(cc.p( (i - 1) * length, (j - 1) * length ))
 
-				layout:addChild(sp, config.listOrder)
+				layout:addChild(sp, config.listOrder - 1)
 			end
 		end
 	end
@@ -51,7 +51,6 @@ end
 
 function Item:addEdgeSpr(path, ifboard)
     local edgeMatrix = self:getEdgeMatrix(ifboard)
-	self:print(edgeMatrix)
 	local factor = {1, 2, 4, 8}
 	for i = 1, self.width do
 		for j = 1, self.height do
@@ -86,7 +85,7 @@ function Item:addOneEdgeSpr(loc, dir, path)
 	end
 	edgeSpr:setRotation(rot)
 	edgeSpr:setTag(config.edgeTag)
-	self.layout:addChild(edgeSpr, config.listOrder - 1)
+	self.layout:addChild(edgeSpr, 0)
 end
 
 function Item:setVisibilityByTag(tag, ifview)

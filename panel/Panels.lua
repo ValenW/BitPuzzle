@@ -1,23 +1,15 @@
-local FreeCoin = require("app.panel.FreeCoin")
-local NoCoin = require("app.panel.NoCoin")
+local Buy = require("app.panel.Buy")
+local Login = require("app.panel.Login")
+local PuzzleDetail = require("app.panel.PuzzleDetail")
 local Setting = require("app.panel.Setting")
-local Shop = require("app.panel.Shop")
-local Skin = require("app.panel.Skin")
-local Tutor = require("app.panel.Tutor")
-local Unlock = require("app.panel.Unlock")
-local GetFreeCoin = require("app.panel.GetFreeCoin")
-local Rank = require("app.panel.Rank")
+local Trapped = require("app.panel.Trapped")
 
 local Panels = {
-    FreeCoin = FreeCoin,
-    NoCoin = NoCoin,
+    Buy = Buy,
+    Login = Login,
+    PuzzleDetail = PuzzleDetail,
     Setting = Setting,
-    Shop = Shop,
-    Skin = Skin,
-    Tutor = Tutor,
-    Unlock = Unlock,
-    GetFreeCoin = GetFreeCoin,
-    Rank = Rank
+    Trapped = Trapped
 }
 
 return Panels

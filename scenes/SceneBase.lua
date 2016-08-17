@@ -21,6 +21,9 @@ function SceneBase:getChild(name)
     local child = self.panel
     for _, v in ipairs(t) do
         child = child:getChildByName(v)
+        if child == nil then
+            return nil
+        end
     end
     return child
 end
@@ -32,7 +35,10 @@ end
 
 function SceneBase:setEvent(name, callback, drawCallback)
     local child = self:getChild(name)
-    
+    if child == nil then
+        return nil
+    end
+
     if child.addTouchEventListener then
         child:addTouchEventListener(function(sender, eventType)
             if eventType == ccui.TouchEventType.began then
@@ -64,6 +70,10 @@ end
 
 function SceneBase:setText(name, set)
     local toSet = self:getChild(name)
+    if toSet == nil then
+        return nil
+    end
+
     if toSet.setTexture ~= nil then
         toSet:setTexture(set)
     elseif toSet.setString ~= nil then
@@ -71,6 +81,12 @@ function SceneBase:setText(name, set)
     else
         -- wrong
     end
+end
+
+function SceneBase:setButtonEnable(name, ifEnable)
+    local toSet = self:getChild(name)
+    toSet:setTouchEnabled(ifEnable)
+    toSet:setBright(ifEnable)
 end
 
 function SceneBase:getChildPosition(name)
@@ -83,6 +99,10 @@ end
 
 function SceneBase:setChildPositionByAnother(name1, name2)
     self:setChildPosition(name1, self:getChildPosition(name2))
+end
+
+function SceneBase:enterSceneByName(sceneName)
+    app:enterScene(sceneName)
 end
 
 return SceneBase

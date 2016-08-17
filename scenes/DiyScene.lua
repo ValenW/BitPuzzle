@@ -2,6 +2,8 @@ local PuzzleEditor = require("app.sprite.PuzzleEditor")
 local config = require("app.MyConfig")
 local userfile = config.userfile
 local SceneBase = require("app.scenes.SceneBase")
+local GameScene = require("app.scenes.GameScene")
+
 local utils = require("app.myUtils")
 
 local DiyScene = class("DiyScene", SceneBase)
@@ -47,8 +49,6 @@ function DiyScene:setTexts()
     self.locWid, self.intervalHeight = locWid, intervalHeight
     self:setBoard("Block", 1)
     self:setBoard("Cut", 1)
-
-    -- self:getChild(basePath):setInnerContainerSize( (math.ceil(config[i.."Num"] / config.colorPerCul) + 1) * intervalHeight)
 end
 
 function DiyScene:setEvents()
@@ -63,6 +63,7 @@ function DiyScene:setEvents()
     self:setEvent("BtnColor", handler(self, self.selectColorType))
     self:setEvent("BtnReset", handler(self, self.reset))
     self:setEvent("BtnSize", handler(self, self.changeSize))
+    self:setEvent("BtnPlay", handler(self, self.tryPlay))
 
     self:getChild("PageView"):addEventListener(handler(self, self.changePage))
 end
@@ -75,6 +76,12 @@ function DiyScene:changeSize()
         self.size = 1
         self:getChild("BtnSize"):setTitleText("1x1")
     end
+end
+
+function DiyScene:tryPlay()
+    self.editor:export("tryPlay.txt")
+    local gameScene = GameScene.new("tryPlay.txt")
+    cc.Director:getInstance():pushScene(gameScene)
 end
 
 function DiyScene:setBoard(type, typeNum)
