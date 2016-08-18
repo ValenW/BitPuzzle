@@ -25,7 +25,6 @@ end
 
 function SelectScene:initPages(Pages)
     local pages = Pages.new(self):getChild("Pages")
-    pages:addEventListener(handler(self, self.changePage))
     self.pages = pages
 
     self:refreshPages()
@@ -38,6 +37,7 @@ function SelectScene:refreshPages(pages)
         self.pages = pages
     end
     
+    self.pages:addEventListener(handler(self, self.changePage))
     for i = 1, 100 do
         local child = self:getChild("PgPoints.Pg"..i)
         if child ~= nil then

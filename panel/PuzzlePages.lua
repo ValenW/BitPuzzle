@@ -76,14 +76,28 @@ end
 
 function PuzzlePages:initPuzzlePic(panel, puzzleNum)
     local puzzle = self.puzzles[puzzleNum]
-    local puzzleItemFunc = nil
+    local path = cc.FileUtils:getInstance():getWritablePath().."BitPuzzle/cut "..puzzle.id
     if puzzle.finished == true then
-        puzzleItemFunc = function () end
+        path = path.."_finished.png"
     else
-        puzzleItemFunc = function (sp) sp:setTexture("Blocks/00/bg_without_board.png") end
+        path = path.."_no_finished.png"
     end
-    -- TODO
-    PuzzleItem.new(puzzle, panel, puzzleItemFunc, true)
+    local sp = cc.Sprite:create(path)
+    if sp == nil then
+        local puzzleItemFunc = nil
+        if puzzle.finished == true then
+            puzzleItemFunc = function () end
+        else
+            puzzleItemFunc = function (sp) sp:setTexture("Blocks/00/bg_without_board.png") end
+        end
+        PuzzleItem.new(puzzle, panel, puzzleItemFunc, true)
+    else
+        local size, lsize = sp:getContentSize(), panel:getContentSize()
+        sp:setScale(lsize.width / size.width, lsize.height / size.height)
+        sp:setAnchorPoint(0,0)
+        sp:setPosition(0,0)
+        panel:addChild(sp)
+    end
 end
 
 function PuzzlePages:getEnterGameFunc(puzzleNum)

@@ -137,7 +137,7 @@ function DiyScene:export()
     if self.importNum then
         time = self.importNum
     end
-    self.editor:export("cut "..time..".txt")
+    self.editor:export("cut "..time)
     userfile.add("times", 1)
 end
 
@@ -148,7 +148,7 @@ function DiyScene:import()
         num = userfile.get("times")
     end
     
-    self.editor:import(num..".txt")
+    self.editor:import(num)
     self:fresh()
     self.importNum = num
 end
@@ -273,7 +273,6 @@ function DiyScene:addPuzzle(x, y, typeNum, id, setType)
         result = self.editor:setCut({x + 1, y + 1}, typeNum * 100 + id)
     end
     
-    dump(path)
     if result == 0 then
         self.puzzleBoard:removeChildByTag(tag, true)
         if setType == 1 then

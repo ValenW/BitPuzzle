@@ -64,6 +64,7 @@ function LevelPages:setButtonsAndTexts()
             setTxt = startPuzzleId.."-"..config.puzzleNum
         end
         self:setText("Pages.Panel"..self.pageNum..".BtnLv"..i..".TxtLv"..i, setTxt)
+        startPuzzleId = startPuzzleId + config.puzzlePerLevel
     end
 
     for i = leftLevel + 1, config.levelPerPage do
@@ -103,7 +104,10 @@ function LevelPages:replacePages(pageNum, id, puzzles)
     local hideAction = cc.FadeOut:create(0.2)
     for i = 1, config.levelPerPage do
         if i ~= id then
-            self:getChild("Pages.Panel"..pageNum..".BtnLv"..i):runAction(hideAction:clone())
+            local btn = self:getChild("Pages.Panel"..pageNum..".BtnLv"..i)
+            if btn ~= nil then
+                btn:runAction(hideAction:clone())
+            end
         end
     end
 
@@ -139,8 +143,11 @@ function LevelPages:getBackFunc(pageNum, id)
         local showAction = cc.FadeIn:create(0.3)
         for i = 1, config.levelPerPage do
             if i ~= id then
-                self:getChild("Pages.Panel"..pageNum..".BtnLv"..i):runAction(showAction:clone())
-                self:getChild("Pages.Panel"..pageNum..".BtnLv"..i..".TxtLv"..i):runAction(showAction:clone())
+                local btn = self:getChild("Pages.Panel"..pageNum..".BtnLv"..i)
+                if btn ~= nil then
+                    btn:runAction(showAction:clone())
+                    btn:getChildByName("TxtLv"..i):runAction(showAction:clone())
+                end
             end
         end
 
