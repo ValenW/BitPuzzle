@@ -33,10 +33,14 @@ function SceneBase:addChildByName(name, child)
     parent:addChild(child)
 end
 
-function SceneBase:setEvent(name, callback, drawCallback)
-    local child = self:getChild(name)
-    if child == nil then
-        return nil
+function SceneBase:setEvent(child, callback, drawCallback)
+    if type(child) == "string" then
+        local name = child
+        child = self:getChild(child)
+        if child == nil then
+            dump(name, "no child named")
+            return nil
+        end
     end
 
     if child.addTouchEventListener then

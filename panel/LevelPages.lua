@@ -150,7 +150,7 @@ function LevelPages:getBackFunc(pageNum, id)
                 end
             end
         end
-
+        
         local btn = self:getChild("Pages.Panel"..pageNum..".BtnLv"..id)
         local moveAction, scaleAction = cc.MoveTo:create(0.3, btn.oldPos), cc.ScaleTo:create(0.3, 1)
         btn:runAction(cc.Spawn:create(moveAction, scaleAction))

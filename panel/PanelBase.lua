@@ -50,10 +50,14 @@ function PanelBase:getChild(name)
     return child
 end
 
-function PanelBase:setEvent(name, callback, drawCallback)
-    local child = self:getChild(name)
-    if child == nil then
-        return nil
+function PanelBase:setEvent(child, callback, drawCallback)
+    if type(child) == "string" then
+        local name = child
+        child = self:getChild(child)
+        if child == nil then
+            dump(name, "no child named")
+            return nil
+        end
     end
 
     if child.addTouchEventListener then

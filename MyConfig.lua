@@ -32,6 +32,11 @@ MyConfig.shadowOpacity = 100
 MyConfig.shadowZ = 2
 MyConfig.listOrder = 3
 
+MyConfig.noneTips = {
+    collection = "No Collection now. Go and \ncollect the stage you like!",
+    mine = "You haven't create your own puzzle now.\nGo to create your own stage \nand share it to your friends!"
+}
+
 MyConfig.colors = {
     [1] = 12,
     [2] = 18,
@@ -73,12 +78,12 @@ if not myUserDefault:getBoolForKey("nofirst") then
     myUserDefault:setIntegerForKey("times", 0)
     myUserDefault:setIntegerForKey("coin", 30)
 
-    local LevelNum = MyConfig.puzzleNum / MyConfig.puzzlePerLevel
+    local LevelNum = math.ceil(MyConfig.puzzleNum / MyConfig.puzzlePerLevel)
     for i = 1, 2 do
         myUserDefault:setIntegerForKey("Level"..i, 1)
     end
-    for i = 2, LevelNum do
-        myUserDefault:setIntegerForKey("Level"..i, 0)
+    for i = 1, LevelNum do
+        myUserDefault:setIntegerForKey("Level"..i, 1)
     end
 
     for i = 1, MyConfig.puzzleNum do

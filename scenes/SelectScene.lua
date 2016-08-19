@@ -1,6 +1,9 @@
 local config = require("app.MyConfig")
 local userfile = config.userfile
 local SceneBase = require("app.scenes.SceneBase")
+local NoneBasic = require("app.panel.NoneBasic")
+local DiyScene = require("app.scenes.DiyScene")
+local Panels = require("app.panel.Panels")
 
 local SelectScene = class("SelectScene", SceneBase)
 
@@ -24,10 +27,37 @@ function SelectScene:setEvents()
 end
 
 function SelectScene:initPages(Pages)
-    local pages = Pages.new(self):getChild("Pages")
+    local puzzles = nil
+    if self.sceneName ~= "basic" then
+        puzzles = self:getPuzzles()
+        if self.sceneName == "mine" and self:getChild("BtnCreate") == nil then
+            local createBtn = ccui.Button:create("ui/btn_create_n.png", "ui/btn_create_p.png", "ui/btn_create_p.png")
+            createBtn:setPosition(self:getChildPosition("BtnSetting"))
+            self:removeChildByName("BtnSetting")
+            createBtn:setName("BtnCreate")
+            self:addChild(createBtn)
+            self:setEvent(createBtn, handler(self, self.enterDiy))
+        end
+        if puzzles == nil then
+            NoneBasic.new(self, self.sceneName)
+            self:getChild("PgPoints"):setVisible(false)
+            return
+        end
+    end
+    local pages = Pages.new(self, puzzles):getChild("Pages")
     self.pages = pages
 
     self:refreshPages()
+end
+
+function SelectScene:getPuzzles()
+    -- TODO
+	return nil
+end
+
+function SelectScene:enterDiy()
+    local diyScene = DiyScene.new()
+    cc.Director:getInstance():pushScene(diyScene)
 end
 
 function SelectScene:refreshPages(pages)
@@ -79,7 +109,7 @@ function SelectScene:update(id)
 end
 
 function SelectScene:setting()
-    -- TODO
+    Panels.Setting.new(self)
 end
 
 return SelectScene

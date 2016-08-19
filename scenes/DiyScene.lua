@@ -296,7 +296,7 @@ function DiyScene:addPuzzle(x, y, typeNum, id, setType)
 end
 
 function DiyScene:back()
-    self:enterSceneByName("MainScene")
+    cc.Director:getInstance():popScene()
 end
 
 return DiyScene

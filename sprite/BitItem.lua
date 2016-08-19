@@ -8,21 +8,36 @@ local BitItem = class("BitItem", Item)
 function BitItem:ctor(matrix, length, puzzleItem)
     self:init(matrix, length)
     self.layout:addTouchEventListener(handler(self, self.touchHandler))
+    self.layout:setPropagateTouchEvents(false)
     self.puzzleItem = puzzleItem
 end
 
 function BitItem:touchHandler(sender, eventType)
     if eventType == ccui.TouchEventType.ended or eventType == ccui.TouchEventType.canceled then
-        self:onTouchEnd(sender)
+        if sender.broadCost then
+            dump("end")
+            self:onTouchEnd(sender)
+        end
+--        return true
     elseif eventType == ccui.TouchEventType.began then
+        dump("began")
         self:onTouchBegan(sender)
-        return true
-    else
+--        return true
+    elseif sender.broadCost then
+        dump("moving")
         self:onTouchMoving(sender)
+--        return true
     end
 end
 
 function BitItem:onTouchBegan(sender)
+    if not self:locInBits(sender) then
+        sender.broadCost = false
+        sender:setSwallowTouches(false)
+        return
+    end
+    sender.broadCost = true
+    sender:setSwallowTouches(true)
     self.layout.opos = self:getWorldPos()
     self:showEdge()
     self:showShadow()
@@ -50,6 +65,16 @@ function BitItem:onTouchEnd(sender)
     self:hideShadow()
     self:putSelf()
     self.layout:setLocalZOrder(config.listOrder - 1)
+end
+
+function BitItem:locInBits(sender)
+    local pos = self.layout:convertToNodeSpace(cc.p(sender:getTouchBeganPosition()))
+    pos = cc.p(math.floor(pos.x / self.blockLength) + 1, math.floor(pos.y / self.blockLength) + 1)
+    if self.matrix[pos.x][pos.y] == 0 then
+        return false
+    else
+        return true
+    end
 end
 
 -- Edge and shadow --
@@ -96,7 +121,7 @@ function BitItem:updateShadowPos()
     if self:inList(pos) then
         self:moveToList()
         local parentPos = cc.p(self.parentPanel:getPosition())
-        local parentWorldPos = cc.p(self.listView:convertToNodeSpace(parentPos))
+        local parentWorldPos = cc.p(self.listView:convertToWorldSpace(parentPos))
         self.shadow.layout:setPosition(parentWorldPos)
     else
         local result = self.puzzleItem:put(self.matrix, pos)
@@ -145,6 +170,7 @@ end
 function BitItem:moveToList()
     if self.parentPanel == nil then
         local clone = self.layout:clone()
+        clone:setTouchEnabled(false)
         local index = self:getIndexInListView()
         self.listView:insertCustomItem(clone, index)
         self.layout:removeFromParent()

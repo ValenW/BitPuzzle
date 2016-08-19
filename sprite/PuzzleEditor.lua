@@ -1,6 +1,7 @@
 local PuzzleEditor = class("PuzzleEditor")
 local Puzzle = require("app.sprite.Puzzle")
 local PuzzleItem = require("app.sprite.PuzzleItem")
+local Panels = require("app.panel.Panels")
 
 local config = require("app.MyConfig")
 local userfile = config.userfile
@@ -46,9 +47,6 @@ function PuzzleEditor:exportAll()
 end
 
 function PuzzleEditor:export(filename)
-
-    
-    
     local panel = ccui.Layout:create()
     panel:setPosition(0, 0)
     panel:setContentSize(cc.size(500, 500))

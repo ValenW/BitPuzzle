@@ -22,6 +22,7 @@ function GameScene:ctor(puzzleFile)
     
     self:setTexts()
     self:setEvents()
+    self:scheduleUpdateWithPriorityLua(handler(self, self.scrollList), 1)
 end
 
 function GameScene:initWithPuzzle(puzzleFile)
@@ -35,7 +36,6 @@ function GameScene:initWithPuzzle(puzzleFile)
     self.bitList = self:getChild("ListView")
     self.bitList:setLocalZOrder(config.listOrder)
     self.bitList:setItemsMargin(60)
-    self.bitList:addTouchEventListener(handler(self, self.scrollList))
     
     local items = self.puzzle:getItems()
     self.bitItems = {}
@@ -43,14 +43,10 @@ function GameScene:initWithPuzzle(puzzleFile)
         self.bitItems[i] = BitItem.new(items[self.puzzleItem.hintOrder[i]], self.blockLength, self.puzzleItem)
         self.bitItems[i].layout:setTouchEnabled(true)
         local clonepanel = self.bitItems[i].layout:clone()
-        
+        clonepanel:setTouchEnabled(false)
 
         self.bitItems[i].layout:setPosition(0, 0)
         clonepanel:addChild(self.bitItems[i].layout)
-
-        self.bitItems[i].layout:setPropagateTouchEvents(false)
-        
-        clonepanel:setBackGroundColor(cc.c3b(0,255,0))
         
         self.bitItems[i].parentPanel = clonepanel
         self.bitItems[i]:setListView(self.bitList)
@@ -58,11 +54,10 @@ function GameScene:initWithPuzzle(puzzleFile)
     end
 end
 
-function GameScene:scrollList(sender, eventType)
-    -- TODO
+function GameScene:scrollList()
     local inner = self.bitList:getInnerContainer()
     local innerPos, size = cc.p(inner:getPosition()).x, inner:getContentSize().width - self.bitList:getContentSize().width
-    if size == 0 then
+    if size <= 0 or self.bitList:getItem(0) == nil then
         self:getChild("ScrollHead"):setVisible(false)
         self:getChild("ScrollBG"):setVisible(false)
         self:getChild("ScrollLeft"):setVisible(false)

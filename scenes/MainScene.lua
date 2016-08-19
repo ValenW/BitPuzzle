@@ -2,6 +2,8 @@ local config = require("app.MyConfig")
 local userfile = config.userfile
 local SceneBase = require("app.scenes.SceneBase")
 local LevelPages = require("app.panel.LevelPages")
+local PuzzlePages = require("app.panel.PuzzlePages")
+
 local SelectScene = require("app.scenes.SelectScene")
 local Panels = require("app.panel.Panels")
 
@@ -55,11 +57,13 @@ function MainScene:enterNew()
 end
 
 function MainScene:enterMine()
-    self:enterSceneByName("DiyScene")
+    local gameScene = SelectScene.new("mine", PuzzlePages)
+    cc.Director:getInstance():pushScene(gameScene)
 end
 
 function MainScene:enterCollect()
---    self:enterSceneByName("CollectScene")
+    local gameScene = SelectScene.new("collection", PuzzlePages)
+    cc.Director:getInstance():pushScene(gameScene)
 end
 
 function MainScene:enterSkin()
